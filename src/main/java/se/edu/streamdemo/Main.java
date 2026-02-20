@@ -9,8 +9,11 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Welcome to Task manager (using streams)");
-        Datamanager dataManager = new Datamanager("./data/data.txt");
+        printWelcomeMessage();
+        Datamanager dataManager = new Datamanager("./data/data.txt"); // relative path
+
+        // "C:\\Users\\dcsaksh\\Desktop\\ip\\data\\data.text" <<< absolute path
+        // /home/username/ip/data/data.text
         ArrayList<Task> tasksData = dataManager.loadData();
 
         System.out.println("Printing all data ...");
@@ -21,6 +24,10 @@ public class Main {
 
         System.out.println("Total number of deadlines: " + countDeadlines(tasksData));
 
+    }
+
+    private static void printWelcomeMessage() {
+        System.out.println("Welcome to Task manager (using streams)");
     }
 
     private static int countDeadlines(ArrayList<Task> tasksData) {
