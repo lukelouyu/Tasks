@@ -1,5 +1,8 @@
 package se.edu.streamdemo;
 
+
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 
 import se.edu.streamdemo.data.Datamanager;
@@ -13,12 +16,15 @@ public class Main {
         Datamanager dataManager = new Datamanager("./data/data.txt");
         ArrayList<Task> tasksData = dataManager.loadData();
 
-        System.out.println("Printing deadlines ...");
-        printDeadlines(tasksData);
+        System.out.println();
+        ArrayList<Task> filteredList = filteredList(tasksData, "11");
+        printAllData(filteredList);
+
         printDeadlineUsingStreams(tasksData);
 
-        System.out.println("Total number of deadlines: " + countDeadlines(tasksData));
-        System.out.println("Total number of deadlines: " + countDeadlineUsingStreams(tasksData));
+        System.out.println("Total number of deadlines (iteration): " + countDeadlines(tasksData));
+        System.out.println("Total number of deadlines (stream): " + countDeadlineUsingStreams(tasksData));
+
 
     }
 
@@ -51,13 +57,6 @@ public class Main {
         System.out.println();
     }
 
-    public static void printDataUsingStreams(ArrayList<Task> tasks) {
-        System.out.println("Print data using stream...");
-        tasks.stream()
-                .forEach(System.out::println);
-
-    }
-
     public static void printDeadlines(ArrayList<Task> tasksData) {
         System.out.println("Print deadline using iteration...");
         for (Task t : tasksData) {
@@ -68,11 +67,22 @@ public class Main {
     }
 
     public static void printDeadlineUsingStreams(ArrayList<Task> tasks) {
-        System.out.println("Print deadline using stream...");
-        tasks.parallelStream()
-                .filter((t) -> t instanceof Deadline)
+
+        System.out.println("Print deadline using streams");
+        tasks.stream()
+                .filter((Task t) -> t instanceof Deadline)
+                .sorted((t1, t2) -> t1.getDescription().compareToIgnoreCase(t2.getDescription()))
                 .forEach(System.out::println);
+
+
     }
 
+    public static ArrayList<Task> filteredList(ArrayList<Task> tasks, String filterString) {
+        ArrayList<Task> filteredList = (ArrayList<Task>) tasks.stream()
+                .filter(t -> t.getDescription().contains(filterString))
+                .collect(toList());
 
+        return filteredList;
+
+    }
 }
